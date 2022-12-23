@@ -9,7 +9,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import dayjs from "dayjs";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 function About() {
@@ -69,6 +70,11 @@ function EventCalendarPicker({
             variant="filled"
             size="md"
             radius="md"
+            error={
+              dayjs(minStartTime).isAfter(dayjs(maxEndTime)) &&
+              "Start time should be before end time"
+            }
+            required
             format="12"
           />
           <Typography gutterBottom>No later than</Typography>
@@ -78,6 +84,12 @@ function EventCalendarPicker({
             sx={{ marginBottom: "25px" }}
             variant="filled"
             size="md"
+            error={
+              dayjs(maxEndTime).isBefore(dayjs(minStartTime)) &&
+              "End time should be after start time"
+            }
+            required
+            withAsterisk
             radius="md"
             format="12"
           />
@@ -90,7 +102,6 @@ function EventCalendarPicker({
             firstDayOfWeek="sunday"
             onChange={setDates}
             style={{
-              // margin: "auto",
               marginBottom: "15px",
             }}
             styles={(theme) => ({
@@ -99,6 +110,9 @@ function EventCalendarPicker({
                 transition: "border-radius .2s",
                 "&:hover": {
                   background: "#ddd",
+                },
+                "&:active": {
+                  background: "#ccc",
                 },
                 color: "#000",
                 "&[data-outside]": {
@@ -135,11 +149,31 @@ function CreateEventMenu() {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [dates, setDates] = useState<Date[]>([]);
-  const [minStartTime, setMinStartTime] = useState<Date | null>(null);
-  const [maxEndTime, setMaxEndTime] = useState<Date | null>(null);
+  const [dates, setDates] = useState<Date[]>([
+    dayjs().startOf("day").toDate(),
+    // dayjs().startOf("day").add(1, "day").toDate(),
+  ]);
+  const [minStartTime, setMinStartTime] = useState<any>(
+    dayjs().startOf("hour").toDate()
+  );
+  const [maxEndTime, setMaxEndTime] = useState<any>(
+    dayjs().startOf("hour").add(9, "hour").toDate()
+  );
 
   const handleSubmit = async () => {
+    if (title == "") {
+      return toast.error("Please enter a title for your event");
+    }
+    if (dayjs(minStartTime).isAfter(dayjs(maxEndTime))) {
+      return toast.error("Start time should be before end time");
+    }
+    if (dates.length == 0) {
+      return toast.error("Please select at least one date");
+    }
+    if (dates.length > 21) {
+      return toast.error("Please select a maximum of 21 dates");
+    }
+
     setLoading(true);
     try {
       const res = await fetch("/api/createEvent", {
@@ -150,13 +184,23 @@ function CreateEventMenu() {
           location,
           noEarlierThan: minStartTime,
           noLaterThan: maxEndTime,
+          defaultDates: JSON.stringify(
+            dates.map((date) => dayjs(date).format("YYYY-MM-DD"))
+          ),
         }),
       }).then((res) => res.json());
       const eventId = res.id;
+      setLoading(false);
     } catch (err: any) {
       toast.error("An error occured:" + err.message);
+      setLoading(false);
     }
   };
+  const inputRef = useRef<any>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <Box sx={{ mb: 5 }}>
@@ -177,7 +221,7 @@ function CreateEventMenu() {
             margin="dense"
             label="Event name"
             placeholder="“Family meet”"
-            autoFocus
+            inputRef={inputRef}
             variant="filled"
           />
           <TextField
