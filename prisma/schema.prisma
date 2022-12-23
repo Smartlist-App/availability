@@ -31,5 +31,7 @@ model Event {
   description      String?
   location         String?
   defaultStartDate DateTime
+  noEarlierThan    DateTime
+  noLaterThan      DateTime
   color            String   @default("blue")
 }

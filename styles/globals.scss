@@ -1,0 +1,40 @@
+*:not(
+    .material-symbols-rounded,
+    .MuiIcon-root,
+    .outlined,
+    .MuiIcon-root *,
+    .outlined *,
+    .material-symbols-rounded *
+  ) {
+  font-family: "DM Sans", sans-serif;
+}
+
+.MuiIcon-root {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  font-display: block !important;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+
+  font-variation-settings: "FILL" 0, "wght" 350, "GRAD" 0, "opsz" 40;
+}
+
+.material-symbols-rounded {
+  font-display: block !important;
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 40;
+}
+
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+}
