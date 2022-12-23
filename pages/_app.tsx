@@ -2,11 +2,10 @@ import { AppBar, Icon, IconButton, Toolbar, Typography } from "@mui/material";
 import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Link from "next/link";
-import Head from "next/head";
 import { ScrollArea } from "@mantine/core";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Head from "next/head";
+import Link from "next/link";
 
 function Navbar() {
   return (
