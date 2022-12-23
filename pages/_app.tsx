@@ -6,6 +6,7 @@ import { ScrollArea } from "@mantine/core";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Head from "next/head";
 import Link from "next/link";
+import { Toaster } from "react-hot-toast";
 
 function Navbar() {
   return (
@@ -80,6 +81,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
+      <Toaster />
       <ScrollArea style={{ height: "100vh" }} scrollbarSize={10}>
         <Navbar />
         <Component {...pageProps} />

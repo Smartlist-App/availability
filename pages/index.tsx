@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 function About() {
   return (
@@ -38,9 +39,14 @@ function About() {
   );
 }
 
-function EventCalendarPicker() {
-  const [dates, setDates] = useState<Date[]>([]);
-
+function EventCalendarPicker({
+  dates,
+  setDates,
+  minStartTime,
+  setMinStartTime,
+  maxEndTime,
+  setMaxEndTime,
+}: any) {
   return (
     <Box sx={{ my: 4 }}>
       <Grid container spacing={2}>
@@ -57,6 +63,8 @@ function EventCalendarPicker() {
             No earlier than
           </Typography>
           <TimeInput
+            value={minStartTime}
+            onChange={setMinStartTime}
             sx={{ marginBottom: "25px" }}
             variant="filled"
             size="md"
@@ -65,6 +73,8 @@ function EventCalendarPicker() {
           />
           <Typography gutterBottom>No later than</Typography>
           <TimeInput
+            value={maxEndTime}
+            onChange={setMaxEndTime}
             sx={{ marginBottom: "25px" }}
             variant="filled"
             size="md"
@@ -120,6 +130,34 @@ function EventCalendarPicker() {
 }
 
 function CreateEventMenu() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [dates, setDates] = useState<Date[]>([]);
+  const [minStartTime, setMinStartTime] = useState<Date | null>(null);
+  const [maxEndTime, setMaxEndTime] = useState<Date | null>(null);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/createEvent", {
+        method: "POST",
+        body: JSON.stringify({
+          name: title,
+          description,
+          location,
+          noEarlierThan: minStartTime,
+          noLaterThan: maxEndTime,
+        }),
+      }).then((res) => res.json());
+      const eventId = res.id;
+    } catch (err: any) {
+      toast.error("An error occured:" + err.message);
+    }
+  };
+
   return (
     <Box sx={{ mb: 5 }}>
       <Grid container spacing={2}>
@@ -133,6 +171,8 @@ function CreateEventMenu() {
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             fullWidth
             margin="dense"
             label="Event name"
@@ -141,17 +181,36 @@ function CreateEventMenu() {
             variant="filled"
           />
           <TextField
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             variant="filled"
             fullWidth
             multiline
             margin="dense"
             label="Description (optional)"
           />
+          <TextField
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            variant="filled"
+            fullWidth
+            margin="dense"
+            label="Location (optional)"
+          />
         </Grid>
       </Grid>
 
-      <EventCalendarPicker />
+      <EventCalendarPicker
+        dates={dates}
+        setDates={setDates}
+        minStartTime={minStartTime}
+        setMinStartTime={setMinStartTime}
+        maxEndTime={maxEndTime}
+        setMaxEndTime={setMaxEndTime}
+      />
       <LoadingButton
+        loading={loading}
+        onClick={handleSubmit}
         fullWidth
         size="large"
         variant="contained"
