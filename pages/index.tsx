@@ -1,15 +1,14 @@
+import { Calendar, TimeInput } from "@mantine/dates";
+import { LoadingButton } from "@mui/lab";
 import {
-  Container,
   Box,
-  Typography,
+  Container,
   Divider,
+  Grid,
   Icon,
   TextField,
-  Grid,
-  Button,
+  Typography,
 } from "@mui/material";
-import { TimeInput } from "@mantine/dates";
-import { Calendar } from "@mantine/dates";
 import { useState } from "react";
 
 function About() {
@@ -152,7 +151,7 @@ function CreateEventMenu() {
       </Grid>
 
       <EventCalendarPicker />
-      <Button
+      <LoadingButton
         fullWidth
         size="large"
         variant="contained"
@@ -160,7 +159,7 @@ function CreateEventMenu() {
       >
         <Icon>check</Icon>
         Create event
-      </Button>
+      </LoadingButton>
     </Box>
   );
 }
