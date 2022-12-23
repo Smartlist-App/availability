@@ -81,7 +81,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <ScrollArea style={{ height: "100vh" }}>
+      <ScrollArea style={{ height: "100vh" }} scrollbarSize={10}>
         <Navbar />
         <Component {...pageProps} />
       </ScrollArea>
