@@ -13,5 +13,5 @@ export default async function handler(req: any, res: any) {
       noLaterThan: req.body.noLaterThan ?? "",
     },
   });
-  res.json({ message: "Coming soon" });
+  res.json(data);
 }

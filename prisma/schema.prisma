@@ -24,19 +24,19 @@ model Session {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 }
-  
+
 model Event {
-  id            String  @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
   description   String?
   location      String?
   noEarlierThan String
   noLaterThan   String
-  defaultDates  Date[]
-  color         String  @default("blue")
+  defaultDates  DefaultDate[]
+  color         String        @default("blue")
 }
 
-model Date {
+model DefaultDate {
   id      Int      @id @default(autoincrement())
   date    DateTime
   event   Event    @relation(fields: [eventId], references: [id])
