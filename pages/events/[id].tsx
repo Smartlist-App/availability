@@ -7,10 +7,48 @@ import {
   Skeleton,
   IconButton,
   Icon,
+  Grid,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import useSWR from "swr";
+
+function EventDayTimes({ date, eventData }: any) {
+  const [userAvailableTimes, setUserAvailableTimes] = useState<any>([]);
+  let { noEarlierThan, noLaterThan } = eventData;
+  noEarlierThan = dayjs(noEarlierThan).format("H");
+  noLaterThan = dayjs(noLaterThan).format("H");
+
+  const hoursInBetween = [];
+  for (let i = noEarlierThan; i <= noLaterThan; i++) {
+    hoursInBetween.push(parseInt(i));
+  }
+
+  return (
+    <Box
+      sx={{
+        p: 2,
+        mb: 2,
+        borderRadius: 5,
+        background: "rgba(200,200,200,.3)",
+      }}
+    >
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6">
+            {dayjs(date.date).format("dddd, MMMM D")}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Stack direction="row" spacing={1}>
+            {JSON.stringify(hoursInBetween)}
+          </Stack>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
 
 function Scheduling({ eventData }: any) {
   return (
@@ -25,11 +63,7 @@ function Scheduling({ eventData }: any) {
         Open times
       </Typography>
       {eventData.defaultDates.map((date: any) => (
-        <Box key={date.date}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            {dayjs(date.date).format("dddd, MMMM D")}
-          </Typography>
-        </Box>
+        <EventDayTimes key={date.date} date={date} eventData={eventData} />
       ))}
     </Box>
   );
