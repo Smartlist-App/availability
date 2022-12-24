@@ -226,7 +226,7 @@ function Scheduling({ eventData }: any) {
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <Box>
           <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
-            Open times
+            Possible times
           </Typography>
           <Typography>Select the times you&apos;re available!</Typography>
         </Box>

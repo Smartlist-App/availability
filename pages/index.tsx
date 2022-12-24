@@ -61,7 +61,7 @@ function EventCalendarPicker({
             When?
           </Typography>
           <Typography sx={{ mb: 1 }} color="text.secondary">
-            Select the days and times you are <b>open to meeting.</b>
+            Select the <b>possible</b> days and times.
           </Typography>
         </Grid>
         <Grid item xs={12} md={3}>

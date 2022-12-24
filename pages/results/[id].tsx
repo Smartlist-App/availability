@@ -127,8 +127,8 @@ function Results({ data }: { data: any }) {
             {dayWhenMostGuestsAreFree.count}{" "}
             {dayWhenMostGuestsAreFree.count == "1" ? "time slot" : "time slots"}
           </b>{" "}
-          {dayWhenMostGuestsAreFree.count == 1 ? "is" : "are"} free, regardless
-          of the hour.
+          {dayWhenMostGuestsAreFree.count == 1 ? "is" : "are"} available,
+          regardless of the hour.
         </Typography>
       </Box>
 
@@ -160,8 +160,11 @@ function Results({ data }: { data: any }) {
                 <Box
                   key={hour}
                   sx={{
-                  
-                    background: "rgba(200,200,200,.3)",
+                    // If hour appears the most, make it green
+                    background:
+                      hourWhereMostGuestsAreFree.hour === hour
+                        ? "rgba(200,200,200,.7)"
+                        : "rgba(200,200,200,.3)",
                     "&:hover": {
                       background: "rgba(200,200,200,.5)",
                       color: "black",
