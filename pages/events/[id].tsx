@@ -92,6 +92,10 @@ function EventDayTimes({
       >
         <Checkbox
           checked={userAvailableTimes[date.date].length > 0}
+          indeterminate={
+            userAvailableTimes[date.date].length > 0 &&
+            userAvailableTimes[date.date].length < hoursInBetween.length
+          }
           onChange={(e) => ref.current?.click()}
         />
         {dayjs(date.date).format("dddd, MMMM D")}
