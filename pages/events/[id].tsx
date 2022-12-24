@@ -8,14 +8,16 @@ import {
   IconButton,
   Icon,
   Grid,
+  Button,
 } from "@mui/material";
+import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
 
 function EventDayTimes({ date, eventData }: any) {
-  const [userAvailableTimes, setUserAvailableTimes] = useState<any>([]);
+  const [userAvailableTimes, setUserAvailableTimes] = useState<number[]>([]);
   let { noEarlierThan, noLaterThan } = eventData;
   noEarlierThan = dayjs(noEarlierThan).format("H");
   noLaterThan = dayjs(noLaterThan).format("H");
@@ -34,18 +36,46 @@ function EventDayTimes({ date, eventData }: any) {
         background: "rgba(200,200,200,.3)",
       }}
     >
-      <Grid container>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6">
-            {dayjs(date.date).format("dddd, MMMM D")}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" spacing={1}>
-            {JSON.stringify(hoursInBetween)}
-          </Stack>
-        </Grid>
-      </Grid>
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        {dayjs(date.date).format("dddd, MMMM D")}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+        }}
+      >
+        <Stack direction="row" spacing={1} sx={{ flexGrow: 1 }}>
+          {hoursInBetween.map((hour) => (
+            <Button
+              key={hour}
+              size="small"
+              color="success"
+              onClick={(e: any) => {
+                const newAvailableTimes = [...userAvailableTimes];
+                if (newAvailableTimes.includes(hour)) {
+                  newAvailableTimes.splice(newAvailableTimes.indexOf(hour), 1);
+                } else {
+                  newAvailableTimes.push(hour);
+                }
+                setUserAvailableTimes(newAvailableTimes);
+              }}
+              variant={userAvailableTimes.includes(hour) ? "contained" : "text"}
+              sx={{
+                ...(!userAvailableTimes.includes(hour) && {
+                  boxShadow:
+                    "0 0 0px 2px " + green["600"] + " inset !important",
+                }),
+              }}
+            >
+              {dayjs(date.date).hour(hour).format("h A")}
+            </Button>
+          ))}
+        </Stack>
+        <Button 
+        >
+          <Icon>check_circle_outline</Icon>
+        </Button>
+      </Box>
     </Box>
   );
 }
