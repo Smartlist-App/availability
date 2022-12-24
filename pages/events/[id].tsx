@@ -346,6 +346,27 @@ export default function Event() {
               sx={{ borderRadius: 5, mb: 2, width: "100px" }}
             />
           </Stack>
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            height={25}
+            sx={{ borderRadius: 5, mb: 2, mt: 4, width: "40%" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            height={20}
+            sx={{ borderRadius: 5, mb: 2, width: "70%" }}
+          />
+          {[...Array(5)].map((_, i) => (
+            <Skeleton
+              key={i}
+              variant="rectangular"
+              animation="wave"
+              height={100}
+              sx={{ borderRadius: 5, mb: 2 }}
+            />
+          ))}
         </Box>
       )}
       {error && (
