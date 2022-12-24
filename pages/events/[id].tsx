@@ -224,9 +224,12 @@ function Scheduling({ eventData }: any) {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
-          Open times
-        </Typography>
+        <Box>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
+            Open times
+          </Typography>
+          <Typography>Select the times you&apos;re available!</Typography>
+        </Box>
         <Tooltip
           title={`Out of these selected dates, enter the times you are available with.
         Once you're done, enter your name and click "Submit" to
@@ -343,9 +346,21 @@ export default function Event() {
                 variant="h5"
                 color="text.secondary"
                 gutterBottom
-                sx={{ mb: 2 }}
+                sx={{
+                  mb: 2,
+                  fontWeight: "200",
+                  gap: 1,
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
-                {data.description}
+                <span>{data.description}</span>&bull;
+                <span
+                  style={{ gap: "10px", display: "flex", alignItems: "center" }}
+                >
+                  <Icon>pin_drop</Icon>
+                  {data.location}
+                </span>
               </Typography>
               <Stack direction="row" spacing={1}>
                 <Chip
@@ -385,6 +400,7 @@ export default function Event() {
             </Box>
           </Box>
           <Scheduling eventData={data} />
+          <Box sx={{ mb: 17 }} />
         </>
       ) : (
         <Box>

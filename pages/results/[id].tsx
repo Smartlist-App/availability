@@ -80,9 +80,6 @@ function Results({ data }: { data: any }) {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: "700", mb: 4 }} gutterBottom>
-        Results
-      </Typography>
       <Box
         sx={{
           p: 2,
@@ -128,10 +125,10 @@ function Results({ data }: { data: any }) {
           , where{" "}
           <b>
             {dayWhenMostGuestsAreFree.count}{" "}
-            {dayWhenMostGuestsAreFree.count == "1" ? "person" : "people"}
+            {dayWhenMostGuestsAreFree.count == "1" ? "time slot" : "time slots"}
           </b>{" "}
           {dayWhenMostGuestsAreFree.count == 1 ? "is" : "are"} free, regardless
-          of the time.
+          of the hour.
         </Typography>
       </Box>
 
@@ -163,6 +160,7 @@ function Results({ data }: { data: any }) {
                 <Box
                   key={hour}
                   sx={{
+                  
                     background: "rgba(200,200,200,.3)",
                     "&:hover": {
                       background: "rgba(200,200,200,.5)",
@@ -320,7 +318,20 @@ export default function Event() {
             }
           />
           <Divider sx={{ my: 4 }} />
-          <Results data={data} />
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "700", mb: 4 }}
+            gutterBottom
+          >
+            Results
+          </Typography>
+          {data.guestTimes.length > 0 ? (
+            <Results data={data} />
+          ) : (
+            <Typography color="text.secondary" sx={{ mt: -3, mb: 5 }}>
+              No results yet - Check back later!
+            </Typography>
+          )}
         </>
       ) : (
         <Box>
