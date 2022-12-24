@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Container,
@@ -16,6 +17,7 @@ import {
 import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import { memo, useCallback, useRef, useState } from "react";
 import useSWR from "swr";
 
@@ -41,7 +43,7 @@ function EventDayTimes({
   }: any) {
     return (
       <Button
-        disableRipple
+        // disableRipple
         key={hour}
         size="small"
         color="success"
@@ -50,9 +52,12 @@ function EventDayTimes({
           userAvailableTimes[date.date].includes(hour) ? "contained" : "text"
         }
         sx={{
-          transition: "none",
+          transition: "border-radius .2s",
+          borderRadius: userAvailableTimes[date.date].includes(hour)
+            ? "13px"
+            : "10px",
           ...(!userAvailableTimes[date.date].includes(hour) && {
-            boxShadow: "0 0 0px 2px " + green["600"] + " inset !important",
+            background: green[100] + "!important",
           }),
         }}
       >
@@ -87,11 +92,9 @@ function EventDayTimes({
         background: "rgba(200,200,200,.3)",
       }}
     >
-      <Typography
-        variant="h6"
-        sx={{ mb: 1, display: "flex", alignItems: "center" }}
-      >
+      <Typography variant="h6" sx={{ display: "flex", alignItems: "center" }}>
         <Checkbox
+          color="success"
           checked={userAvailableTimes[date.date].length > 0}
           indeterminate={
             userAvailableTimes[date.date].length > 0 &&
@@ -106,7 +109,7 @@ function EventDayTimes({
           display: "flex",
         }}
       >
-        <Stack direction="row" spacing={1} sx={{ flexGrow: 1 }}>
+        <Stack direction="row" spacing={1} sx={{ flexGrow: 1, ml: 5.5 }}>
           {hoursInBetween.map((hour: any) => (
             <HourButton
               hour={hour}
@@ -184,6 +187,33 @@ function Scheduling({ eventData }: any) {
       return acc;
     }, {}),
   });
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/addGuestTime", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          userAvailableTimes: userAvailableTimes,
+          eventId: eventData.id,
+        }),
+      }).then((res) => res.json());
+      toast.success(
+        "Your edits have been carefully saved. Redirecting yout to the results..."
+      );
+      router.push(`/results/${eventData.id}`);
+    } catch (err: any) {
+      alert(err.message);
+    }
+    setLoading(false);
+  };
 
   return (
     <Box
@@ -193,14 +223,21 @@ function Scheduling({ eventData }: any) {
         pt: 5,
       }}
     >
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
-        Open times
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }}>
-        Out of these selected dates, enter the times you are available with.
-        Once you&apos;re done, enter your name and click &quot;Submit&quot; to
-        continue.
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
+          Open times
+        </Typography>
+        <Tooltip
+          title={`Out of these selected dates, enter the times you are available with.
+        Once you're done, enter your name and click "Submit" to
+        continue.`}
+        >
+          <IconButton sx={{ ml: "auto" }}>
+            <Icon className="outlined">help_outline</Icon>
+          </IconButton>
+        </Tooltip>
+      </Box>
+
       {eventData.defaultDates.map((date: any) => (
         <EventDayTimes
           key={date.date}
@@ -221,7 +258,7 @@ function Scheduling({ eventData }: any) {
           borderRadius: 5,
           p: 2,
           position: "fixed",
-          bottom: 15,
+          bottom: 25,
           width: "100%",
           maxWidth: { xs: "calc(100% - 40px)", sm: "500px" },
           left: "50%",
@@ -230,19 +267,50 @@ function Scheduling({ eventData }: any) {
         }}
       >
         <TextField
-          variant="standard"
-          placeholder="What's your name?"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          variant="outlined"
+          size="small"
+          label="What's your name?"
+          autoComplete="off"
+          InputProps={{
+            sx: {
+              borderRadius: 3,
+            },
+          }}
           fullWidth
           color="success"
         />
-        <Button
-          variant="contained"
-          sx={{ gap: 2, borderRadius: 99, px: 4 }}
-          color="success"
+        <Tooltip
+          title={
+            Object.values(userAvailableTimes).filter(
+              (times: any) => times.length > 0
+            ).length === 0
+              ? "Please select at least one time"
+              : name.trim() === ""
+              ? "Please enter your name"
+              : "Submit"
+          }
         >
-          Submit
-          <Icon>send</Icon>
-        </Button>
+          <Box>
+            <LoadingButton
+              loading={loading}
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{ gap: 2, borderRadius: 99, px: 2 }}
+              color="success"
+              disabled={
+                name.trim() == "" ||
+                Object.values(userAvailableTimes).filter(
+                  (times: any) => times.length > 0
+                ).length === 0
+              }
+            >
+              Submit
+              <Icon>send</Icon>
+            </LoadingButton>
+          </Box>
+        </Tooltip>
       </Box>
     </Box>
   );

@@ -18,6 +18,10 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
           rel="stylesheet"
         />
+        <link
+          rel="shortcut icon"
+          href="https://cdn.jsdelivr.net/gh/Smartlist-App/Assets@latest/v3/windows11/Square44x44Logo.altform-unplated_targetsize-48.png"
+        />
       </Head>
       <body>
         <Main />

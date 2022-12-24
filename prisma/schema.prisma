@@ -36,13 +36,22 @@ model Event {
   defaultDates  DefaultDate[]
   color         String        @default("blue")
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id])
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+  GuestTime GuestTime[]
 }
 
 model DefaultDate {
   id      Int      @id @default(autoincrement())
   date    DateTime
   event   Event    @relation(fields: [eventId], references: [id])
+  eventId String
+}
+
+model GuestTime {
+  id      Int    @id @default(autoincrement())
+  name    String
+  times   Json   @default("[]") @db.Json
+  event   Event  @relation(fields: [eventId], references: [id])
   eventId String
 }
