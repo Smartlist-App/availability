@@ -10,11 +10,12 @@ import {
   Grid,
   Button,
   Tooltip,
+  Checkbox,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import useSWR from "swr";
 
 function EventDayTimes({
@@ -27,7 +28,7 @@ function EventDayTimes({
   noEarlierThan = dayjs(noEarlierThan).format("H");
   noLaterThan = dayjs(noLaterThan).format("H");
 
-  const hoursInBetween = [];
+  const hoursInBetween: any = [];
   for (let i = noEarlierThan; i <= noLaterThan; i++) {
     hoursInBetween.push(parseInt(i));
   }
@@ -74,6 +75,7 @@ function EventDayTimes({
     },
     [date.date, setUserAvailableTimes, userAvailableTimes]
   );
+  const ref = useRef<HTMLButtonElement>(null);
 
   return (
     <Box
@@ -85,6 +87,10 @@ function EventDayTimes({
       }}
     >
       <Typography variant="h6" sx={{ mb: 1 }}>
+        <Checkbox
+          checked={userAvailableTimes[date.date].length > 0}
+          onChange={(e) => ref.current?.click()}
+        />
         {dayjs(date.date).format("dddd, MMMM D")}
       </Typography>
       <Box
@@ -93,7 +99,7 @@ function EventDayTimes({
         }}
       >
         <Stack direction="row" spacing={1} sx={{ flexGrow: 1 }}>
-          {hoursInBetween.map((hour) => (
+          {hoursInBetween.map((hour: any) => (
             <HourButton
               hour={hour}
               key={hour}
@@ -102,26 +108,43 @@ function EventDayTimes({
             />
           ))}
         </Stack>
-        <Tooltip title="Apply to all">
-          <Button
-            sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
-            onClick={() => {
-              // apply key `date.date`'s values to all dates in object
-              setUserAvailableTimes({
-                ...userAvailableTimes,
-                ...Object.keys(userAvailableTimes).reduce(
-                  (acc: any, key: any) => {
-                    acc[key] = userAvailableTimes[date.date];
-                    return acc;
-                  },
-                  {}
-                ),
-              });
-            }}
-          >
-            <Icon>copy_all</Icon>
-          </Button>
-        </Tooltip>
+        <Box>
+          <Tooltip title="Apply to all">
+            <Button
+              sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
+              onClick={() => {
+                // apply key `date.date`'s values to all dates in object
+                setUserAvailableTimes({
+                  ...userAvailableTimes,
+                  ...Object.keys(userAvailableTimes).reduce(
+                    (acc: any, key: any) => {
+                      acc[key] = userAvailableTimes[date.date];
+                      return acc;
+                    },
+                    {}
+                  ),
+                });
+              }}
+            >
+              <Icon>copy_all</Icon>
+            </Button>
+          </Tooltip>
+          <Tooltip title="Select all">
+            <Button
+              sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
+              onClick={() => {
+                // apply all values `date.date`
+                setUserAvailableTimes({
+                  ...userAvailableTimes,
+                  [date.date]: hoursInBetween,
+                });
+              }}
+              ref={ref}
+            >
+              <Icon>select_all</Icon>
+            </Button>
+          </Tooltip>
+        </Box>
       </Box>
     </Box>
   );
