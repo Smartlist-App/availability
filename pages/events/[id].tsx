@@ -233,6 +233,7 @@ function Scheduling({ eventData }: any) {
           variant="standard"
           placeholder="What's your name?"
           fullWidth
+          color="success"
         />
         <Button
           variant="contained"
