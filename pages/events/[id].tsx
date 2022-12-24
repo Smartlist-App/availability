@@ -140,6 +140,7 @@ export default function Event() {
           sx={{
             p: 2,
             borderRadius: 5,
+            mb: 5,
             background: "rgba(200,200,200,.3)",
           }}
         >
