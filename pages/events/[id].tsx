@@ -12,6 +12,29 @@ import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
+function Scheduling({ eventData }: any) {
+  return (
+    <Box
+      sx={{
+        borderTop: "1px solid #ccc",
+        mt: 5,
+        pt: 5,
+      }}
+    >
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
+        Open times
+      </Typography>
+      {eventData.defaultDates.map((date: any) => (
+        <Box key={date.date}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {dayjs(date.date).format("dddd, MMMM D")}
+          </Typography>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
 export default function Event() {
   const router = useRouter();
   const id = router.query.id;
@@ -23,55 +46,60 @@ export default function Event() {
   return (
     <Container sx={{ mt: 8 }}>
       {data ? (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box>
-            <Typography
-              variant="h2"
-              sx={{
-                mb: 2,
-                textDecoration: "underline",
-              }}
-            >
-              {data.name}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              gutterBottom
-              sx={{ mb: 2 }}
-            >
-              {data.description}
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              <Chip
-                label={
-                  "No earlier than " +
-                  dayjs(data.noEarlierThan)
-                    .format("h:mm A")
-                    .replace(":00 ", " ")
-                }
-              />
-              <Chip
-                label={
-                  "No later than " +
-                  dayjs(data.noLaterThan).format("h:mm A").replace(":00 ", " ")
-                }
-              />
-            </Stack>
+        <>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box>
+              <Typography
+                variant="h2"
+                sx={{
+                  mb: 2,
+                  textDecoration: "underline",
+                }}
+              >
+                {data.name}
+              </Typography>
+              <Typography
+                variant="h5"
+                color="text.secondary"
+                gutterBottom
+                sx={{ mb: 2 }}
+              >
+                {data.description}
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Chip
+                  label={
+                    "No earlier than " +
+                    dayjs(data.noEarlierThan)
+                      .format("h:mm A")
+                      .replace(":00 ", " ")
+                  }
+                />
+                <Chip
+                  label={
+                    "No later than " +
+                    dayjs(data.noLaterThan)
+                      .format("h:mm A")
+                      .replace(":00 ", " ")
+                  }
+                />
+              </Stack>
+            </Box>
+            <Box sx={{ ml: "auto" }}>
+              <IconButton
+                onClick={(e: any) => {
+                  navigator.clipboard.writeText(
+                    "https://" + window.location.hostname + "/events/" + data.id
+                  );
+                }}
+                size="large"
+              >
+                <Icon>share</Icon>
+              </IconButton>
+            </Box>
           </Box>
-          <Box sx={{ ml: "auto" }}>
-            <IconButton
-              onClick={(e: any) => {
-                navigator.clipboard.writeText(
-                  "https://" + window.location.hostname + "/events/" + data.id
-                );
-              }}
-              size="large"
-            >
-              <Icon>share</Icon>
-            </IconButton>
-          </Box>
-        </Box>
+          <Scheduling eventData={data} />
+        </>
       ) : (
         <Box>
           <Skeleton

@@ -7,7 +7,11 @@ export default async function handler(req: any, res: any) {
       id: id,
     },
     include: {
-      defaultDates: true,
+      defaultDates: {
+        orderBy: {
+          date: "asc",
+        },
+      },
     },
   });
   res.json(data);
