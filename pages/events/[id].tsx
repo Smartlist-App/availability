@@ -9,6 +9,7 @@ import {
   Icon,
   Grid,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
@@ -101,23 +102,26 @@ function EventDayTimes({
             />
           ))}
         </Stack>
-        <Button
-          onClick={() => {
-            // apply key `date.date`'s values to all dates in object
-            setUserAvailableTimes({
-              ...userAvailableTimes,
-              ...Object.keys(userAvailableTimes).reduce(
-                (acc: any, key: any) => {
-                  acc[key] = userAvailableTimes[date.date];
-                  return acc;
-                },
-                {}
-              ),
-            });
-          }}
-        >
-          <Icon>check_circle_outline</Icon>
-        </Button>
+        <Tooltip title="Apply to all">
+          <Button
+            sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
+            onClick={() => {
+              // apply key `date.date`'s values to all dates in object
+              setUserAvailableTimes({
+                ...userAvailableTimes,
+                ...Object.keys(userAvailableTimes).reduce(
+                  (acc: any, key: any) => {
+                    acc[key] = userAvailableTimes[date.date];
+                    return acc;
+                  },
+                  {}
+                ),
+              });
+            }}
+          >
+            <Icon>copy_all</Icon>
+          </Button>
+        </Tooltip>
       </Box>
     </Box>
   );
