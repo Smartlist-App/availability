@@ -11,6 +11,7 @@ import {
   Button,
   Tooltip,
   Checkbox,
+  TextField,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
@@ -195,6 +196,11 @@ function Scheduling({ eventData }: any) {
       <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
         Open times
       </Typography>
+      <Typography variant="body1" sx={{ mb: 3 }}>
+        Out of these selected dates, enter the times you are available with.
+        Once you&apos;re done, enter your name and click &quot;Submit&quot; to
+        continue.
+      </Typography>
       {eventData.defaultDates.map((date: any) => (
         <EventDayTimes
           key={date.date}
@@ -204,6 +210,39 @@ function Scheduling({ eventData }: any) {
           setUserAvailableTimes={setUserAvailableTimes}
         />
       ))}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          background: "#fff",
+          boxShadow:
+            "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+          borderRadius: 5,
+          p: 2,
+          position: "fixed",
+          bottom: 15,
+          width: "100%",
+          maxWidth: { xs: "calc(100% - 40px)", sm: "500px" },
+          left: "50%",
+          transform: "translateX(-50%)",
+          border: "1px solid #ccc",
+        }}
+      >
+        <TextField
+          variant="standard"
+          placeholder="What's your name?"
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          sx={{ gap: 2, borderRadius: 99, px: 4 }}
+          color="success"
+        >
+          Submit
+          <Icon>send</Icon>
+        </Button>
+      </Box>
     </Box>
   );
 }
