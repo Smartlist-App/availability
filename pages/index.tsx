@@ -2,13 +2,17 @@ import { Calendar, TimeInput } from "@mantine/dates";
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
+  Chip,
   Container,
   Divider,
   Grid,
   Icon,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
+import { Stack } from "@mui/system";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -160,6 +164,8 @@ function CreateEventMenu() {
     dayjs().startOf("hour").add(9, "hour").toDate()
   );
 
+  const [eventData, setEventData] = useState<any | null>(null);
+
   const handleSubmit = async () => {
     if (title == "") {
       return toast.error("Please enter a title for your event");
@@ -176,7 +182,7 @@ function CreateEventMenu() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/createEvent", {
+      const res: any = await fetch("/api/createEvent", {
         method: "POST",
         body: JSON.stringify({
           name: title,
@@ -189,7 +195,7 @@ function CreateEventMenu() {
           ),
         }),
       }).then((res) => res.json());
-      const eventId = res.id;
+      setEventData(res);
       setLoading(false);
     } catch (err: any) {
       toast.error("An error occured:" + err.message);
@@ -202,8 +208,87 @@ function CreateEventMenu() {
     inputRef.current?.focus();
   }, []);
 
-  return (
+  return eventData ? (
+    <Box sx={{ my: 5 }}>
+      <Typography
+        variant="h2"
+        sx={{
+          textDecoration: "underline",
+        }}
+      >
+        {eventData.name}
+      </Typography>
+      <Typography variant="h5" color="text.secondary" gutterBottom>
+        {eventData.description || <i>(no description provided)</i>}
+      </Typography>
+      <Stack direction="row" spacing={1}>
+        <Chip
+          label={
+            "No earlier than " + dayjs(eventData.noEarlierThan).format("h:mm A")
+          }
+        />
+        <Chip
+          label={
+            "No later than " + dayjs(eventData.noLaterThan).format("h:mm A")
+          }
+        />
+      </Stack>
+      <Typography variant="h6" sx={{ mb: 1, mt: 4 }}>
+        Shareable URL
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        Have your friends fill in their available times, and Carbon will find
+        the best time to meet together
+      </Typography>
+      <TextField
+        fullWidth
+        onClick={(e: any) => {
+          e.target.select();
+          navigator.clipboard.writeText(
+            "https://" + window.location.hostname + "/events/" + eventData.id
+          );
+          toast.success("Copied to clipboard");
+        }}
+        margin="dense"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                sx={{
+                  "& .MuiIcon-root": {
+                    transition: "all .2s",
+                    fontVariationSettings:
+                      '"FILL" 0, "wght" 350, "GRAD" 0, "opsz" 40!important',
+                  },
+                  "&:hover .MuiIcon-root": {
+                    fontVariationSettings:
+                      '"FILL" 1, "wght" 350, "GRAD" 0, "opsz" 40!important',
+                  },
+                }}
+                onClick={() => {
+                  window.navigator.share({
+                    url:
+                      "https://" +
+                      window.location.hostname +
+                      "/events/" +
+                      eventData.id,
+                    text: "Carbon Availability • Find the best time to meet",
+                  });
+                }}
+              >
+                <Icon>share</Icon>
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        value={
+          "https://" + window.location.hostname + "/events/" + eventData.id
+        }
+      />
+    </Box>
+  ) : (
     <Box sx={{ mb: 5 }}>
+      <About />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Typography variant="h6" sx={{ mb: 1, fontWeight: "700" }}>
@@ -270,7 +355,6 @@ function CreateEventMenu() {
 export default function Render() {
   return (
     <Container>
-      <About />
       <CreateEventMenu />
     </Container>
   );

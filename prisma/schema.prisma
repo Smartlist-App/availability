@@ -16,6 +16,7 @@ model User {
   name    String?
   token   String    @unique @default(cuid())
   Session Session[]
+  Event   Event[]
 }
 
 model Session {
@@ -34,6 +35,9 @@ model Event {
   noLaterThan   String
   defaultDates  DefaultDate[]
   color         String        @default("blue")
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 }
 
 model DefaultDate {
