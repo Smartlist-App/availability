@@ -86,7 +86,10 @@ function EventDayTimes({
         background: "rgba(200,200,200,.3)",
       }}
     >
-      <Typography variant="h6" sx={{ mb: 1 }}>
+      <Typography
+        variant="h6"
+        sx={{ mb: 1, display: "flex", alignItems: "center" }}
+      >
         <Checkbox
           checked={userAvailableTimes[date.date].length > 0}
           onChange={(e) => ref.current?.click()}
@@ -129,19 +132,36 @@ function EventDayTimes({
               <Icon>copy_all</Icon>
             </Button>
           </Tooltip>
-          <Tooltip title="Select all">
+          <Tooltip
+            title={
+              userAvailableTimes[date.date].length > 0
+                ? "Deselect all"
+                : "Select all"
+            }
+          >
             <Button
               sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
               onClick={() => {
-                // apply all values `date.date`
-                setUserAvailableTimes({
-                  ...userAvailableTimes,
-                  [date.date]: hoursInBetween,
-                });
+                // apply all values `date.date` if not already selected, else empty array
+                if (userAvailableTimes[date.date].length > 0) {
+                  setUserAvailableTimes({
+                    ...userAvailableTimes,
+                    [date.date]: [],
+                  });
+                } else {
+                  setUserAvailableTimes({
+                    ...userAvailableTimes,
+                    [date.date]: hoursInBetween,
+                  });
+                }
               }}
               ref={ref}
             >
-              <Icon>select_all</Icon>
+              <Icon>
+                {userAvailableTimes[date.date].length > 0
+                  ? "deselect"
+                  : "select_all"}
+              </Icon>
             </Button>
           </Tooltip>
         </Box>
