@@ -13,7 +13,7 @@ import {
 import { green } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import useSWR from "swr";
 
 function EventDayTimes({
@@ -30,6 +30,49 @@ function EventDayTimes({
   for (let i = noEarlierThan; i <= noLaterThan; i++) {
     hoursInBetween.push(parseInt(i));
   }
+
+  const HourButton = memo(function HourButton({
+    hour,
+    userAvailableTimes,
+    handleClick,
+  }: any) {
+    return (
+      <Button
+        disableRipple
+        key={hour}
+        size="small"
+        color="success"
+        onClick={() => handleClick(hour)}
+        variant={
+          userAvailableTimes[date.date].includes(hour) ? "contained" : "text"
+        }
+        sx={{
+          transition: "none",
+          ...(!userAvailableTimes[date.date].includes(hour) && {
+            boxShadow: "0 0 0px 2px " + green["600"] + " inset !important",
+          }),
+        }}
+      >
+        {dayjs(date.date).hour(hour).format("h A")}
+      </Button>
+    );
+  });
+
+  const handleClick = useCallback(
+    (hour: any) => {
+      const newAvailableTimes = [...userAvailableTimes[date.date]];
+      if (newAvailableTimes.includes(hour)) {
+        newAvailableTimes.splice(newAvailableTimes.indexOf(hour), 1);
+      } else {
+        newAvailableTimes.push(hour);
+      }
+      setUserAvailableTimes({
+        ...userAvailableTimes,
+        [date.date]: newAvailableTimes,
+      });
+    },
+    [date.date, setUserAvailableTimes, userAvailableTimes]
+  );
 
   return (
     <Box
@@ -50,36 +93,12 @@ function EventDayTimes({
       >
         <Stack direction="row" spacing={1} sx={{ flexGrow: 1 }}>
           {hoursInBetween.map((hour) => (
-            <Button
+            <HourButton
+              hour={hour}
               key={hour}
-              size="small"
-              color="success"
-              onClick={(e: any) => {
-                const newAvailableTimes = [...userAvailableTimes[date.date]];
-                if (newAvailableTimes.includes(hour)) {
-                  newAvailableTimes.splice(newAvailableTimes.indexOf(hour), 1);
-                } else {
-                  newAvailableTimes.push(hour);
-                }
-                setUserAvailableTimes({
-                  ...userAvailableTimes,
-                  [date.date]: newAvailableTimes,
-                });
-              }}
-              variant={
-                userAvailableTimes[date.date].includes(hour)
-                  ? "contained"
-                  : "text"
-              }
-              sx={{
-                ...(!userAvailableTimes[date.date].includes(hour) && {
-                  boxShadow:
-                    "0 0 0px 2px " + green["600"] + " inset !important",
-                }),
-              }}
-            >
-              {dayjs(date.date).hour(hour).format("h A")}
-            </Button>
+              userAvailableTimes={userAvailableTimes}
+              handleClick={handleClick}
+            />
           ))}
         </Stack>
         <Button
