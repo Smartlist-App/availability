@@ -16,8 +16,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
 
-function EventDayTimes({ date, eventData }: any) {
-  const [userAvailableTimes, setUserAvailableTimes] = useState<number[]>([]);
+function EventDayTimes({
+  userAvailableTimes,
+  setUserAvailableTimes,
+  date,
+  eventData,
+}: any) {
   let { noEarlierThan, noLaterThan } = eventData;
   noEarlierThan = dayjs(noEarlierThan).format("H");
   noLaterThan = dayjs(noLaterThan).format("H");
@@ -51,17 +55,24 @@ function EventDayTimes({ date, eventData }: any) {
               size="small"
               color="success"
               onClick={(e: any) => {
-                const newAvailableTimes = [...userAvailableTimes];
+                const newAvailableTimes = [...userAvailableTimes[date.date]];
                 if (newAvailableTimes.includes(hour)) {
                   newAvailableTimes.splice(newAvailableTimes.indexOf(hour), 1);
                 } else {
                   newAvailableTimes.push(hour);
                 }
-                setUserAvailableTimes(newAvailableTimes);
+                setUserAvailableTimes({
+                  ...userAvailableTimes,
+                  [date.date]: newAvailableTimes,
+                });
               }}
-              variant={userAvailableTimes.includes(hour) ? "contained" : "text"}
+              variant={
+                userAvailableTimes[date.date].includes(hour)
+                  ? "contained"
+                  : "text"
+              }
               sx={{
-                ...(!userAvailableTimes.includes(hour) && {
+                ...(!userAvailableTimes[date.date].includes(hour) && {
                   boxShadow:
                     "0 0 0px 2px " + green["600"] + " inset !important",
                 }),
@@ -71,7 +82,20 @@ function EventDayTimes({ date, eventData }: any) {
             </Button>
           ))}
         </Stack>
-        <Button 
+        <Button
+          onClick={() => {
+            // apply key `date.date`'s values to all dates in object
+            setUserAvailableTimes({
+              ...userAvailableTimes,
+              ...Object.keys(userAvailableTimes).reduce(
+                (acc: any, key: any) => {
+                  acc[key] = userAvailableTimes[date.date];
+                  return acc;
+                },
+                {}
+              ),
+            });
+          }}
         >
           <Icon>check_circle_outline</Icon>
         </Button>
@@ -81,6 +105,15 @@ function EventDayTimes({ date, eventData }: any) {
 }
 
 function Scheduling({ eventData }: any) {
+  const [userAvailableTimes, setUserAvailableTimes] = useState<{
+    [key: string]: number[];
+  }>({
+    ...eventData.defaultDates.reduce((acc: any, date: any) => {
+      acc[date.date] = [];
+      return acc;
+    }, {}),
+  });
+
   return (
     <Box
       sx={{
@@ -93,7 +126,13 @@ function Scheduling({ eventData }: any) {
         Open times
       </Typography>
       {eventData.defaultDates.map((date: any) => (
-        <EventDayTimes key={date.date} date={date} eventData={eventData} />
+        <EventDayTimes
+          key={date.date}
+          date={date}
+          eventData={eventData}
+          userAvailableTimes={userAvailableTimes}
+          setUserAvailableTimes={setUserAvailableTimes}
+        />
       ))}
     </Box>
   );
