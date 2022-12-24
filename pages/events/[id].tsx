@@ -88,9 +88,14 @@ export default function Event() {
             <Box sx={{ ml: "auto" }}>
               <IconButton
                 onClick={(e: any) => {
-                  navigator.clipboard.writeText(
-                    "https://" + window.location.hostname + "/events/" + data.id
-                  );
+                  navigator.share({
+                    url:
+                      "https://" +
+                      window.location.hostname +
+                      "/events/" +
+                      data.id,
+                    text: "Carbon Availability • Find the best time to meet",
+                  });
                 }}
                 size="large"
               >
