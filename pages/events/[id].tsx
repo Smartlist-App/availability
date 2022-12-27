@@ -148,7 +148,7 @@ function EventDayTimes({
             }
           >
             <Button
-              sx={{ minWidth: 0, px: 1, borderRadius: 999 }}
+              sx={{ minWidth: 0, px: 1, borderRadius: 999, display: "none" }}
               onClick={() => {
                 // apply all values `date.date` if not already selected, else empty array
                 if (userAvailableTimes[date.date].length > 0) {
@@ -225,10 +225,12 @@ function Scheduling({ eventData }: any) {
     >
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <Box>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: "700" }}>
+          <Typography variant="h5" sx={{ mb: 1, fontWeight: "700" }}>
             Possible times
           </Typography>
-          <Typography>Select the times you&apos;re available!</Typography>
+          <Typography sx={{ mb: 2 }}>
+            Select the times you&apos;re available.
+          </Typography>
         </Box>
         <Tooltip
           title={`Out of these selected dates, enter the times you are available with.
@@ -335,6 +337,7 @@ export default function Event() {
             <Box>
               <Typography
                 variant="h2"
+                className="text-secondary"
                 sx={{
                   mb: 2,
                   textDecoration: "underline",
