@@ -342,26 +342,33 @@ export default function Event() {
               >
                 {data.name}
               </Typography>
-              <Typography
-                variant="h5"
-                color="text.secondary"
-                gutterBottom
-                sx={{
-                  mb: 2,
-                  fontWeight: "200",
-                  gap: 1,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <span>{data.description}</span>&bull;
-                <span
-                  style={{ gap: "10px", display: "flex", alignItems: "center" }}
-                >
-                  <Icon>pin_drop</Icon>
-                  {data.location}
-                </span>
-              </Typography>
+              {data.description ||
+                (data.location && (
+                  <Typography
+                    variant="h5"
+                    color="text.secondary"
+                    gutterBottom
+                    sx={{
+                      mb: 2,
+                      fontWeight: "200",
+                      gap: 1,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>{data.description}</span>&bull;
+                    <span
+                      style={{
+                        gap: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon>pin_drop</Icon>
+                      {data.location}
+                    </span>
+                  </Typography>
+                ))}
               <Stack direction="row" spacing={1}>
                 <Chip
                   label={

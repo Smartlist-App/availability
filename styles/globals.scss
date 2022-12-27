@@ -4,9 +4,15 @@
     .outlined,
     .MuiIcon-root *,
     .outlined *,
-    .material-symbols-rounded *
+    .material-symbols-rounded *,
+    .text-secondary,
+    .text-secondary *
   ) {
   font-family: "DM Sans", sans-serif !important;
+}
+.text-secondary,
+.text-secondary * {
+  font-family: "DM Serif Display", serif !important;
 }
 
 .MuiIcon-root {
@@ -37,4 +43,39 @@ html,
 body {
   margin: 0;
   overflow: hidden;
+  // background: "#c4b5b5";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.MuiIconButton-root {
+  transition: none;
+  transform: scale(1) !important;
+}
+.MuiIconButton-root:active .material-symbols-rounded,
+.MuiIconButton-root:active .material-symbols-outlined {
+  transform: scale(1);
+  opacity: 0.6;
+}
+.MuiIconButton-root:not(:active) .material-symbols-rounded,
+.MuiIconButton-root:not(:active) .material-symbols-outlined {
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.MuiIconButton-root .MuiTouchRipple-rippleVisible {
+  animation-duration: 0.5s !important;
+}
+
+.MuiTouchRipple-rippleVisible {
+  animation-duration: 0.25s !important;
+}
+.MuiTouchRipple-child {
+  filter: opacity(0.3) !important;
+  background: radial-gradient(#000, #000);
+}
+.rippleDark .MuiTouchRipple-child,
+.dark .MuiTouchRipple-child {
+  background: radial-gradient(#fff, #000) !important;
 }
