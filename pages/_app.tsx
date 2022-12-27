@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Button,
   Icon,
   IconButton,
   Toolbar,
@@ -14,8 +15,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Head from "next/head";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 function Navbar() {
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -52,15 +56,29 @@ function Navbar() {
               </Link>
             </Typography>
           </Box>
-          <IconButton
+          <Button
+            onClick={() => router.push("/")}
             color="inherit"
             disableRipple
             sx={{
-              "&:hover": { background: "rgba(200,200,200,.3)", color: "#000" },
+              gap: 1.5,
+              color: "#fff",
+              fontWeight: "600",
+              px: 2,
+              borderRadius: 4,
+              transition: "none",
+              mr: 1,
+              background:
+                "linear-gradient(45deg, #432371 0%, #faae7b 100%)!important",
+              "&:hover:not(:active)": {
+                boxShadow:
+                  "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+              },
             }}
           >
             <Icon>add</Icon>
-          </IconButton>
+            Plan my event
+          </Button>
           <IconButton
             color="inherit"
             disableRipple
