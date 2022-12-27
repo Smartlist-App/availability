@@ -23,6 +23,7 @@ function Navbar() {
   return (
     <>
       <Head>
+        <meta name="theme-color" content="#fff" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
