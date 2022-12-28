@@ -28,7 +28,7 @@ export default function Document() {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://availability.smartlist.tech/" />
         <meta property="twitter:title" content="Carbon Availability" />
-        <meta property="twitter:description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required">
+        <meta property="twitter:description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required" />
 
   
         <meta property="og:image" content="/image.png" />
