@@ -29,6 +29,7 @@ import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
 import { StepIconProps } from "@mui/material/StepIcon";
+import { orange } from "@mui/material/colors";
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -134,7 +135,21 @@ function EventCalendarPicker({
           <Typography sx={{ mb: 1 }} color="text.secondary">
             Select the possible days &amp; times you are open to meeting.
           </Typography>
-          <Typography sx={{ mb: 1 }} color="text.secondary">
+          <Typography
+            sx={{
+              mb: 1,
+              display: "flex",
+              gap: 2,
+              background: orange[50],
+              color: orange[900],
+              p: 1,
+              mt: 1,
+              borderRadius: 5,
+            }}
+          >
+            <Icon className="outlined" sx={{ mt: 1 }}>
+              lightbulb
+            </Icon>
             Generally, it&apos;s better to select a maximum of 3-5 days to make
             it easier for your guests.
           </Typography>
@@ -351,6 +366,11 @@ function CreateEventMenu() {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  setStep(1);
+                }
+              }}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               fullWidth

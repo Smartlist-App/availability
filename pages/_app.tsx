@@ -64,13 +64,32 @@ function Navbar() {
         }}
       >
         <Toolbar sx={{ gap: 1, height: "100%" }}>
-          <Box sx={{ mr: "auto" }}>
+          <Box
+            sx={{
+              mr: "auto",
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              mt: 0.5,
+            }}
+          >
+            <picture>
+              <img
+                src="https://cdn.jsdelivr.net/gh/Smartlist-App/Assets@latest/v3/windows11/Square44x44Logo.altform-unplated_targetsize-256.png"
+                width="32px"
+                height="32px"
+                alt="Logo"
+              />
+            </picture>
             <Typography
               variant="h6"
               sx={{
+                mt: -0.5,
                 "&:hover": {
                   textDecoration: "underline",
                 },
+                display: "flex",
+                alignItems: "center",
               }}
             >
               <Link
@@ -92,7 +111,8 @@ function Navbar() {
               gap: 1.5,
               color: "#fff",
               fontWeight: "600",
-              px: 2,
+              px: { xs: 1, sm: 2 },
+              minWidth: "auto",
               borderRadius: 4,
               transition: "none",
               mr: 1,
@@ -105,7 +125,15 @@ function Navbar() {
             }}
           >
             <Icon>add</Icon>
-            Plan my event
+            <Typography
+              sx={{
+                display: { xs: "none", sm: "block" },
+                fontSize: "14px",
+                fontWeight: "600",
+              }}
+            >
+              Plan my event
+            </Typography>
           </Button>
           {data && data.profile && data.profile.user.name ? (
             <IconButton
@@ -141,7 +169,7 @@ function Navbar() {
                 );
               }}
             >
-              Sign in
+              Sign&nbsp;in
             </Button>
           )}
         </Toolbar>
