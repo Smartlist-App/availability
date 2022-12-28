@@ -3,7 +3,7 @@ import { serialize } from "cookie";
 
 export default async function handler(req: any, res: any) {
   try {
-    const { accessToken }: any = req.query;
+    const { token: accessToken }: any = req.query;
     const { AVAILABILITY_OAUTH_SECRET }: any = process.env;
 
     const request = await fetch(
