@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import * as colors from "@mui/material/colors";
+
 import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 
@@ -21,6 +22,7 @@ import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import cookie from "cookie";
 import useSWR from "swr";
+import { useEffect } from "react";
 
 function Navbar() {
   const router = useRouter();
@@ -28,6 +30,11 @@ function Navbar() {
   const { data, error }: any = useSWR("/api/oauth/session", () =>
     fetch("/api/oauth/session").then((res) => res.json())
   );
+
+  global.themeColor = data.user.profile.color;
+  useEffect(() => {
+    global.themeColor = data.user.profile.color;
+  }, [data]);
 
   return (
     <>
@@ -107,7 +114,7 @@ function Navbar() {
             >
               <Avatar
                 sx={{
-                  background: colors[data.user.profile.color][500],
+                  background: colors[themeColor][500],
                 }}
               >
                 {data.user.profile.name.substring(0, 1).toUpperCase()}
