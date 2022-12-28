@@ -28,12 +28,15 @@ export default async function handler(req: any, res: any) {
     now.setDate(now.getDate() * 7 * 4);
     res.setHeader(
       "Set-Cookie",
-      serialize("token", encoded, {
+      serialize("session", encoded, {
         path: "/",
         maxAge: 60 * 60 * 24 * 7 * 4, // 1 month
         expires: now,
       })
     );
+    res.json({
+      success: true,
+    });
   } catch (e) {
     res.json({ error: "Something went wrong" });
   }

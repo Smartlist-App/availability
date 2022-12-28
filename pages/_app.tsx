@@ -4,6 +4,7 @@ import {
   Button,
   Icon,
   IconButton,
+  NoSsr,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -16,9 +17,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
+import cookie from "cookie";
 
 function Navbar() {
   const router = useRouter();
+  const cookies = cookie.parse(document.cookie);
 
   return (
     <>
@@ -87,7 +90,9 @@ function Navbar() {
           <IconButton
             color="inherit"
             disableRipple
-            href="https://my.smartlist.tech/auth?application=availability"
+            onClick={() => {
+              
+            }}
             sx={{
               "&:hover": { background: "rgba(200,200,200,.3)", color: "#000" },
             }}
@@ -189,7 +194,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <Toaster />
       <ScrollArea style={{ height: "100vh" }} scrollbarSize={10}>
-        <Navbar />
+        <NoSsr>
+          <Navbar />
+        </NoSsr>
         <Component {...pageProps} />
       </ScrollArea>
     </ThemeProvider>
