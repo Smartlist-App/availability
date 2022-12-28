@@ -52,9 +52,7 @@ export default async function handler(req: any, res: any) {
         expires: now,
       })
     );
-    res.json({
-      success: true,
-    });
+    res.redirect("/");
   } catch (e) {
     console.log(e);
     res.json({ error: "Something went wrong" });
