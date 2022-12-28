@@ -32,12 +32,14 @@ function Navbar() {
   );
 
   global.themeColor =
-    data && data.user && data.user.profile ? data.user.profile.color : "brown";
+    data && data.profile && data.profile.user
+      ? data.profile.user.color
+      : "brown";
 
   useEffect(() => {
     global.themeColor =
-      data && data.user && data.user.profile
-        ? data.user.profile.color
+      data && data.profile && data.profile.user
+        ? data.profile.user.color
         : "brown";
   }, [data]);
 
@@ -105,7 +107,7 @@ function Navbar() {
             <Icon>add</Icon>
             Plan my event
           </Button>
-          {data && data.user && data.user.name ? (
+          {data && data.profile && data.profile.user.name ? (
             <IconButton
               color="inherit"
               disableRipple
@@ -122,7 +124,7 @@ function Navbar() {
                   background: colors[themeColor][500],
                 }}
               >
-                {data.user.profile.name.substring(0, 1).toUpperCase()}
+                {data.profile.user.name.substring(0, 1).toUpperCase()}
               </Avatar>
             </IconButton>
           ) : (
