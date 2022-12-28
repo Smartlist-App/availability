@@ -15,6 +15,11 @@
   font-family: "DM Serif Display", serif !important;
 }
 
+.MuiBackdrop-root {
+  background: rgba(200, 200, 200, 0.5);
+  backdrop-filter: blur(3px);
+}
+
 .MuiIcon-root {
   font-family: "Material Symbols Rounded";
   font-weight: normal;

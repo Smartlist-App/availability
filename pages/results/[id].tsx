@@ -10,11 +10,20 @@ import {
   InputAdornment,
   TextField,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  DialogContentText,
+  SwipeableDrawer,
 } from "@mui/material";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { useState } from "react";
+import { green, red } from "@mui/material/colors";
 
 export type GuestTimes = GuestTime[];
 
@@ -27,6 +36,145 @@ export interface GuestTime {
 
 export interface Times {
   [key: string]: number[];
+}
+
+function HourTile({ hourWhereMostGuestsAreFree, hour, guestTimes, date }: any) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Box
+        onClick={() => setOpen(!open)}
+        sx={{
+          // If hour appears the most, make it green
+          background:
+            hourWhereMostGuestsAreFree.hour === hour
+              ? "rgba(200,200,200,.7)"
+              : "rgba(200,200,200,.3)",
+          "&:hover": {
+            background: "rgba(200,200,200,.5)",
+            color: "black",
+            cursor: "pointer",
+          },
+          width: "50px",
+          height: "50px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          borderRadius: 3,
+          fontSize: "12px",
+          fontWeight: "700",
+          color: "rgba(0,0,0,.5)",
+        }}
+      >
+        {hour % 12 || 12} {hour >= 12 ? "PM" : "AM"}
+        <span style={{ fontSize: "15px" }}>
+          {
+            guestTimes.filter(
+              (guestTime: any) =>
+                guestTime.times[date.date] &&
+                guestTime.times[date.date].includes(hour)
+            ).length
+          }
+        </span>
+      </Box>
+
+      <SwipeableDrawer
+        anchor="bottom"
+        disableSwipeToOpen
+        open={open}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            borderRadius: "20px 20px 0 0",
+            maxWidth: "500px",
+            mx: "auto",
+          },
+        }}
+      >
+        <DialogTitle>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+            }}
+          >
+            Guests available at {hour % 12 || 12} {hour >= 12 ? "PM" : "AM"}
+          </Typography>
+          <Typography variant="body2">
+            {
+              guestTimes.filter(
+                (guestTime: any) =>
+                  guestTime.times[date.date] &&
+                  guestTime.times[date.date].includes(hour)
+              ).length
+            }{" "}
+            guests
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          {guestTimes
+            .sort((a: any, b: any) =>
+              a.times[date.date] &&
+              a.times[date.date].includes(hour) &&
+              b.times[date.date] &&
+              b.times[date.date].includes(hour)
+                ? 0
+                : a.times[date.date] && a.times[date.date].includes(hour)
+                ? -1
+                : 1
+            )
+            .map((guestTime: any) => (
+              <Box
+                key={Math.random()}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 1,
+                }}
+              >
+                <Typography variant="body1">{guestTime.name}</Typography>
+                <Typography variant="body1">
+                  {guestTime.times[date.date] &&
+                  guestTime.times[date.date].includes(hour) ? (
+                    <Icon
+                      sx={{
+                        color: green["500"],
+                      }}
+                    >
+                      check
+                    </Icon>
+                  ) : (
+                    <Icon
+                      sx={{
+                        color: red["500"],
+                      }}
+                    >
+                      close
+                    </Icon>
+                  )}
+                </Typography>
+              </Box>
+            ))}
+          {guestTimes.length == 0 && <>No Guests are available at this time</>}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ borderRadius: 99 }}
+            onClick={() => setOpen(false)}
+          >
+            Done
+          </Button>
+        </DialogActions>
+      </SwipeableDrawer>
+    </>
+  );
 }
 
 function Results({ data }: { data: any }) {
@@ -80,60 +228,70 @@ function Results({ data }: { data: any }) {
 
   return (
     <Box>
-      <Box
-        sx={{
-          p: 2,
-          borderRadius: 5,
-          background: "rgba(200,200,200,.3)",
-          mb: 2,
-        }}
-      >
-        <Typography variant="body1" gutterBottom>
-          The best hour to meet is{" "}
-        </Typography>
-        <Typography variant="h5">
-          <u>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: 5,
+            width: "100%",
+            background: "rgba(200,200,200,.3)",
+          }}
+        >
+          <Typography variant="body1" gutterBottom>
+            The best hour to meet is{" "}
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            <u>
+              <b>
+                {hourWhereMostGuestsAreFree.hour % 12 || 12}{" "}
+                {hourWhereMostGuestsAreFree.hour >= 12 ? "PM" : "AM"}
+              </b>
+            </u>
+          </Typography>
+          <Typography>
+            where{" "}
             <b>
-              {hourWhereMostGuestsAreFree.hour % 12 || 12}{" "}
-              {hourWhereMostGuestsAreFree.hour >= 12 ? "PM" : "AM"}
-            </b>
-          </u>
-          , where{" "}
-          <b>
-            {hourWhereMostGuestsAreFree.count}{" "}
-            {hourWhereMostGuestsAreFree.count == 1 ? "person" : "people"}
-          </b>{" "}
-          {hourWhereMostGuestsAreFree.count == 1 ? "is" : "are"} available,
-          regardless of the date.
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          p: 2,
-          borderRadius: 5,
-          background: "rgba(200,200,200,.3)",
-          mb: 5,
-        }}
-      >
-        <Typography variant="body1" gutterBottom>
-          The best day to meet is{" "}
-        </Typography>
-        <Typography variant="h5">
-          <u>
-            <b>{dayjs(dayWhenMostGuestsAreFree.date).format("dddd, MMMM D")}</b>
-          </u>
-          , where{" "}
-          <b>
-            {dayWhenMostGuestsAreFree.count}{" "}
-            {dayWhenMostGuestsAreFree.count == "1" ? "time slot" : "time slots"}
-          </b>{" "}
-          {dayWhenMostGuestsAreFree.count == 1 ? "is" : "are"} available,
-          regardless of the hour.
-        </Typography>
+              {hourWhereMostGuestsAreFree.count}{" "}
+              {hourWhereMostGuestsAreFree.count == 1 ? "person" : "people"}
+            </b>{" "}
+            {hourWhereMostGuestsAreFree.count == 1 ? "is" : "are"} available,
+            regardless of the date.
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: 5,
+            width: "100%",
+            background: "rgba(200,200,200,.3)",
+          }}
+        >
+          <Typography variant="body1" gutterBottom>
+            The best day to meet is{" "}
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            <u>
+              <b>
+                {dayjs(dayWhenMostGuestsAreFree.date).format("dddd, MMMM D")}
+              </b>
+            </u>
+          </Typography>
+          <Typography>
+            where{" "}
+            <b>
+              {dayWhenMostGuestsAreFree.count}{" "}
+              {dayWhenMostGuestsAreFree.count == "1"
+                ? "time slot"
+                : "time slots"}
+            </b>{" "}
+            {dayWhenMostGuestsAreFree.count == 1 ? "is" : "are"} available,
+            regardless of the hour.
+          </Typography>
+        </Box>
       </Box>
 
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: "700" }}>
-        Detailed view
+      <Typography variant="h5" gutterBottom sx={{ fontWeight: "700", mt: 5 }}>
+        Guests available by day
       </Typography>
 
       <Typography
@@ -157,42 +315,13 @@ function Results({ data }: { data: any }) {
             {dayjs(date.date).format("dddd, MMMM D")}
             <Box sx={{ ml: "auto", display: "flex", gap: 2 }}>
               {hoursInBetween.map((hour: number) => (
-                <Box
+                <HourTile
+                  hourWhereMostGuestsAreFree={hourWhereMostGuestsAreFree}
+                  hour={hour}
+                  guestTimes={guestTimes}
+                  date={date}
                   key={hour}
-                  sx={{
-                    // If hour appears the most, make it green
-                    background:
-                      hourWhereMostGuestsAreFree.hour === hour
-                        ? "rgba(200,200,200,.7)"
-                        : "rgba(200,200,200,.3)",
-                    "&:hover": {
-                      background: "rgba(200,200,200,.5)",
-                      color: "black",
-                      cursor: "pointer",
-                    },
-                    width: "50px",
-                    height: "50px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    borderRadius: 3,
-                    fontSize: "12px",
-                    fontWeight: "700",
-                    color: "rgba(0,0,0,.5)",
-                  }}
-                >
-                  {hour % 12 || 12} {hour >= 12 ? "PM" : "AM"}
-                  <span style={{ fontSize: "15px" }}>
-                    {
-                      guestTimes.filter(
-                        (guestTime) =>
-                          guestTime.times[date.date] &&
-                          guestTime.times[date.date].includes(hour)
-                      ).length
-                    }
-                  </span>
-                </Box>
+                />
               ))}
             </Box>
           </Box>
@@ -232,7 +361,6 @@ export default function Event() {
                 color="text.secondary"
                 gutterBottom
                 sx={{
-                  mb: 2,
                   fontWeight: "200",
                   gap: 1,
                   display: "flex",
@@ -248,7 +376,7 @@ export default function Event() {
                 </span>
               </Typography>
             ))}
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
             <Chip
               label={
                 "No earlier than " +
