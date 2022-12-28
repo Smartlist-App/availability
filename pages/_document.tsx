@@ -14,8 +14,8 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
           rel="stylesheet"
         />
-        <meta property="og:image" content="/image.png">
-        <meta property="twitter:image" content="/image.png">
+        <meta property="og:image" content="/image.png" />
+        <meta property="twitter:image" content="/image.png" />
 
         <link
           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
