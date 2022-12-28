@@ -9,7 +9,8 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import 
+import { colors } from "../lib/colors";
+
 import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 
