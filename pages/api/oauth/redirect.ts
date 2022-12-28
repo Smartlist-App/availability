@@ -20,14 +20,16 @@ export default async function handler(req: any, res: any) {
 
     const user = await prisma.user.upsert({
       where: {
-        email: request.email,
+        email: request.user.email,
       },
       update: {},
       create: {
-        email: request.email,
-        name: request.name,
+        email: request.user.email,
+        name: request.user.name,
       },
     });
+
+    console.log(user);
 
     const encoded = jwt.sign(
       {
@@ -54,6 +56,7 @@ export default async function handler(req: any, res: any) {
       success: true,
     });
   } catch (e) {
+    console.log(e);
     res.json({ error: "Something went wrong" });
   }
 }
