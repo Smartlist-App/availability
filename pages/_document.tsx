@@ -14,6 +14,23 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
           rel="stylesheet"
         />
+
+        <meta name="title" content="Carbon Availability" />
+        <meta name="description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://availability.smartlist.tech/" />
+        <meta property="og:title" content="Carbon Availability" />
+        <meta property="og:description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required" />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://availability.smartlist.tech/" />
+        <meta property="twitter:title" content="Carbon Availability" />
+        <meta property="twitter:description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required">
+
+  
         <meta property="og:image" content="/image.png" />
         <meta property="twitter:image" content="/image.png" />
 
