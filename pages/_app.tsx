@@ -91,7 +91,13 @@ function Navbar() {
             color="inherit"
             disableRipple
             onClick={() => {
-              
+              if (cookies.session) {
+                alert(JSON.stringify(cookies.session));
+              } else {
+                router.push(
+                  "https://my.smartlist.tech/auth?application=availability"
+                );
+              }
             }}
             sx={{
               "&:hover": { background: "rgba(200,200,200,.3)", color: "#000" },
