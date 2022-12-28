@@ -107,10 +107,10 @@ function Navbar() {
             >
               <Avatar
                 sx={{
-                  background: colors[data.user.color][500],
+                  background: colors[data.user.profile.color][500],
                 }}
               >
-                {data.user.name.substring(0, 1).toUpperCase()}
+                {data.user.profile.name.substring(0, 1).toUpperCase()}
               </Avatar>
             </IconButton>
           ) : (
