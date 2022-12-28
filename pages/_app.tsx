@@ -31,9 +31,14 @@ function Navbar() {
     fetch("/api/oauth/session").then((res) => res.json())
   );
 
-  global.themeColor = data.user.profile.color;
+  global.themeColor =
+    data && data.user && data.user.profile ? data.user.profile.color : "brown";
+
   useEffect(() => {
-    global.themeColor = data.user.profile.color;
+    global.themeColor =
+      data && data.user && data.user.profile
+        ? data.user.profile.color
+        : "brown";
   }, [data]);
 
   return (
@@ -122,6 +127,12 @@ function Navbar() {
             </IconButton>
           ) : (
             <Button
+              // variant="outlined"
+              sx={{
+                borderRadius: 9,
+                px: 2,
+                background: "rbga(200,200,200,.3)",
+              }}
               onClick={() => {
                 router.push(
                   "https://my.smartlist.tech/auth?application=availability"
@@ -217,7 +228,7 @@ export default function App({ Component, pageProps }: AppProps) {
     palette: {
       // mode: "dark",
       primary: {
-        main: "#6b4b4b",
+        main: global.themeColor ? colors[global.themeColor]["500"] : "#6b4b4b",
       },
     },
   });
