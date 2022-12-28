@@ -87,6 +87,7 @@ function Navbar() {
           <IconButton
             color="inherit"
             disableRipple
+            href="https://my.smartlist.tech/auth?application=availability"
             sx={{
               "&:hover": { background: "rgba(200,200,200,.3)", color: "#000" },
             }}
