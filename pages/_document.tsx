@@ -18,13 +18,11 @@ export default function Document() {
         <meta name="title" content="Carbon Availability" />
         <meta name="description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required" />
 
-        <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://availability.smartlist.tech/" />
         <meta property="og:title" content="Carbon Availability" />
         <meta property="og:description" content="Carbon helps you find the best time to meet based on your guest's availability. No signup required" />
 
-        <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://availability.smartlist.tech/" />
         <meta property="twitter:title" content="Carbon Availability" />
