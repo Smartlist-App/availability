@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import prisma from "../../../prisma/prisma";
 import { serialize } from "cookie";
 
@@ -37,7 +37,7 @@ export default async function handler(req: any, res: any) {
           token: user.token,
         },
       },
-      process.env.SECRET_COOKIE_PASSWORD
+      process.env.SECRET_COOKIE_PASSWORD as Secret
     );
 
     const now = new Date();
