@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import prisma from "../../../prisma/prisma";
 import { serialize } from "cookie";
 
 export default async function handler(req: any, res: any) {
@@ -17,13 +18,28 @@ export default async function handler(req: any, res: any) {
       }
     ).then((res) => res.json());
 
+    const user = await prisma.user.upsert({
+      where: {
+        email: request.email,
+      },
+      update: {},
+      create: {
+        email: request.email,
+        name: request.name,
+      },
+    });
+
     const encoded = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7 * 4 * 12, // 1 year
-        ...request,
+        ...{
+          profile: request,
+          token: user.token,
+        },
       },
       process.env.SECRET_COOKIE_PASSWORD
     );
+
     const now = new Date();
     now.setDate(now.getDate() * 7 * 4);
     res.setHeader(

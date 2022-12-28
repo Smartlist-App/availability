@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   Icon,
@@ -8,6 +9,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import * as colors from "@mui/material/colors";
 import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 
@@ -18,10 +20,14 @@ import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import cookie from "cookie";
+import useSWR from "swr";
 
 function Navbar() {
   const router = useRouter();
   const cookies = cookie.parse(document.cookie);
+  const { data, error }: any = useSWR("/api/oauth/session", () =>
+    fetch("/api/oauth/session").then((res) => res.json())
+  );
 
   return (
     <>
@@ -87,24 +93,37 @@ function Navbar() {
             <Icon>add</Icon>
             Plan my event
           </Button>
-          <IconButton
-            color="inherit"
-            disableRipple
-            onClick={() => {
-              if (cookies.session) {
-                alert(JSON.stringify(cookies.session));
-              } else {
+          {data && data.user && data.user.name ? (
+            <IconButton
+              color="inherit"
+              disableRipple
+              sx={{
+                "&:hover": {
+                  background: "rgba(200,200,200,.3)",
+                  color: "#000",
+                },
+                p: 0,
+              }}
+            >
+              <Avatar
+                sx={{
+                  background: colors[data.user.color][500],
+                }}
+              >
+                {data.user.name.substring(0, 1).toUpperCase()}
+              </Avatar>
+            </IconButton>
+          ) : (
+            <Button
+              onClick={() => {
                 router.push(
                   "https://my.smartlist.tech/auth?application=availability"
                 );
-              }
-            }}
-            sx={{
-              "&:hover": { background: "rgba(200,200,200,.3)", color: "#000" },
-            }}
-          >
-            <Icon className="outlined">person</Icon>
-          </IconButton>
+              }}
+            >
+              Sign in
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <Toolbar style={{ height: "70px" }} />
