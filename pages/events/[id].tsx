@@ -27,13 +27,14 @@ function EventDayTimes({
   date,
   eventData,
 }: any) {
-  let { noEarlierThan, noLaterThan } = eventData;
+  let { noEarlierThan, noLaterThan }: any = eventData;
   noEarlierThan = dayjs(noEarlierThan).format("H");
   noLaterThan = dayjs(noLaterThan).format("H");
 
   const hoursInBetween: any = [];
   for (let i = parseInt(noEarlierThan); i <= parseInt(noLaterThan); i++) {
-    hoursInBetween.push(parseInt(i));
+    const e: any = i;
+    hoursInBetween.push(parseInt(e));
   }
 
   const HourButton = memo(function HourButton({
