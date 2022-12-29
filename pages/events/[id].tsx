@@ -32,7 +32,7 @@ function EventDayTimes({
   noLaterThan = dayjs(noLaterThan).format("H");
 
   const hoursInBetween: any = [];
-  for (let i = noEarlierThan; i <= noLaterThan; i++) {
+  for (let i = parseInt(noEarlierThan); i <= parseInt(noLaterThan); i++) {
     hoursInBetween.push(parseInt(i));
   }
 
