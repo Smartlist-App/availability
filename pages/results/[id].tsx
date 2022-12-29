@@ -228,7 +228,7 @@ function Results({ data }: { data: any }) {
 
   return (
     <Box>
-      <Box sx={{ display: {sm: "flex"}, gap: 2 }}>
+      <Box sx={{ display: "flex", gap: 2, flexDirection: { sm: "column" } }}>
         <Box
           sx={{
             p: 2,
